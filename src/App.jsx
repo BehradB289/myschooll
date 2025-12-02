@@ -16,36 +16,19 @@ import {
   Music, Camera, Globe, HelpCircle
 } from 'lucide-react';
 
-/* تنظیمات فایربیس */
-const firebaseConfig = {
-  apiKey: "AIzaSyBzhIE1Vakctip7WuKoq7OjViuQk04TBTM",
-  authDomain: "schoolapp-630cb.firebaseapp.com",
-  projectId: "schoolapp-630cb",
-  storageBucket: "schoolapp-630cb.firebasestorage.app",
-  messagingSenderId: "799329665536",
-  appId: "1:799329665536:web:24e45acfd1dab8223bcee5",
-  measurementId: "G-6881YK4W47"
-};
+/* --- تنظیمات فایربیس (اصلاح شده برای محیط اجرا) --- */
+// استفاده از تنظیمات محیطی به جای مقادیر هاردکد شده برای رفع ارور 400
+const firebaseConfig = JSON.parse(__firebase_config);
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-const appId = typeof __app_id !== 'undefined' ? __app_id : 'med-school-exhibit';
+const appId = typeof __app_id !== 'undefined' ? __app_id : 'school-exhibit-default';
 
-// --- لیست دسته‌بندی‌های رای‌گیری (۱۳ گزینه) ---
+// --- لیست دسته‌بندی‌های رای‌گیری (۳ گزینه) ---
 const VOTE_CATEGORIES = [
   { id: 'تکنولوژی', icon: <Smartphone size={24} />, color: 'text-blue-600', bg: 'bg-blue-50 dark:bg-blue-900/20', border: 'border-blue-500' },
-  { id: 'هوش مصنوعی', icon: <Cpu size={24} />, color: 'text-violet-600', bg: 'bg-violet-50 dark:bg-violet-900/20', border: 'border-violet-500' },
-  { id: 'رباتیک', icon: <Zap size={24} />, color: 'text-yellow-600', bg: 'bg-yellow-50 dark:bg-yellow-900/20', border: 'border-yellow-500' },
-  { id: 'پزشکی و سلامت', icon: <Heart size={24} />, color: 'text-red-600', bg: 'bg-red-50 dark:bg-red-900/20', border: 'border-red-500' },
-  { id: 'محیط زیست', icon: <Leaf size={24} />, color: 'text-emerald-600', bg: 'bg-emerald-50 dark:bg-emerald-900/20', border: 'border-emerald-500' },
-  { id: 'شیمی و آزمایشگاه', icon: <FlaskConical size={24} />, color: 'text-cyan-600', bg: 'bg-cyan-50 dark:bg-cyan-900/20', border: 'border-cyan-500' },
-  { id: 'فیزیک و نجوم', icon: <Atom size={24} />, color: 'text-sky-600', bg: 'bg-sky-50 dark:bg-sky-900/20', border: 'border-sky-500' },
-  { id: 'هنر و معماری', icon: <Palette size={24} />, color: 'text-pink-600', bg: 'bg-pink-50 dark:bg-pink-900/20', border: 'border-pink-500' },
-  { id: 'ادبیات', icon: <BookOpen size={24} />, color: 'text-amber-700', bg: 'bg-amber-50 dark:bg-amber-900/20', border: 'border-amber-600' },
-  { id: 'تاریخ و فرهنگ', icon: <Hourglass size={24} />, color: 'text-orange-600', bg: 'bg-orange-50 dark:bg-orange-900/20', border: 'border-orange-500' },
-  { id: 'ورزش و تندرستی', icon: <Trophy size={24} />, color: 'text-lime-600', bg: 'bg-lime-50 dark:bg-lime-900/20', border: 'border-lime-500' },
-  { id: 'موسیقی', icon: <Music size={24} />, color: 'text-fuchsia-600', bg: 'bg-fuchsia-50 dark:bg-fuchsia-900/20', border: 'border-fuchsia-500' },
-  { id: 'عکاسی و رسانه', icon: <Camera size={24} />, color: 'text-slate-600', bg: 'bg-slate-100 dark:bg-slate-800', border: 'border-slate-500' },
+  { id: 'فرهنگی', icon: <Hourglass size={24} />, color: 'text-orange-600', bg: 'bg-orange-50 dark:bg-orange-900/20', border: 'border-orange-500' },
+  { id: 'سرگرمی آموزشی', icon: <Atom size={24} />, color: 'text-violet-600', bg: 'bg-violet-50 dark:bg-violet-900/20', border: 'border-violet-500' },
 ];
 
 // --- کامپوننت‌های UI ---
@@ -90,7 +73,7 @@ const TextArea = ({ placeholder, value, onChange, className = "" }) => (
   />
 );
 
-// --- Modal Component (Custom Confirmation) ---
+// --- Modal Component ---
 const Modal = ({ isOpen, title, message, onConfirm, onCancel, type = "danger", confirmText = "بله، مطمئنم" }) => {
   if (!isOpen) return null;
   return (
@@ -114,7 +97,7 @@ const Modal = ({ isOpen, title, message, onConfirm, onCancel, type = "danger", c
   );
 };
 
-// --- Toast Notification Component ---
+// --- Toast Notification ---
 const Toast = ({ message, type, onClose }) => (
   <div className={`fixed bottom-4 left-4 z-50 flex items-center gap-2 px-4 py-3 rounded-lg shadow-lg text-white animate-in slide-in-from-bottom duration-300 ${type === 'success' ? 'bg-emerald-600' : 'bg-red-600'}`}>
     {type === 'success' ? <CheckCircle size={18} /> : <AlertCircle size={18} />}
@@ -122,7 +105,7 @@ const Toast = ({ message, type, onClose }) => (
   </div>
 );
 
-// --- Full Screen Projector Component ---
+// --- Full Screen Projector ---
 const ProjectorView = ({ projectResults, voteCounts, onClose, totalVotes }) => {
     return (
         <div className="fixed inset-0 z-[100] bg-slate-900 text-white overflow-y-auto p-8 flex flex-col font-sans" dir="rtl">
@@ -177,11 +160,9 @@ const ProjectorView = ({ projectResults, voteCounts, onClose, totalVotes }) => {
                     <div className="space-y-6 overflow-y-auto max-h-[600px] pr-2">
                         {Object.entries(voteCounts)
                            .sort(([,a], [,b]) => b - a)
-                           .slice(0, 8) // Show top 8 categories to fit screen
+                           .slice(0, 8) // Show top 8 categories
                            .map(([catName, count]) => {
-                             const catInfo = VOTE_CATEGORIES.find(c => c.id === catName) || { color: 'text-gray-400', bg: 'bg-gray-500' };
-                             // Extract tailwind color class for bg bar
-                             const barColor = catInfo.id === 'تکنولوژی' ? 'bg-blue-500' : 'bg-teal-500'; // Simplified for fallback
+                             const catInfo = VOTE_CATEGORIES.find(c => c.id === catName) || { color: 'text-gray-400', bg: 'bg-gray-500', icon: <Activity size={24}/> };
                              
                             return (
                             <div key={catName}>
@@ -250,18 +231,28 @@ export default function SchoolExhibitionApp() {
       setModal({ isOpen: true, title, message, onConfirm: () => { onConfirm(); closeModal(); }, type, confirmText });
   };
 
-  // --- Firebase Init ---
+  // --- Firebase Init & Auth (Fixed) ---
   useEffect(() => {
     mounted.current = true;
     const initAuth = async () => {
       try {
+        // اولویت اول: ورود با توکن اختصاصی (برای رفع مشکل 400)
         if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
           await signInWithCustomToken(auth, __initial_auth_token);
         } else {
+          // اولویت دوم: ورود ناشناس
           await signInAnonymously(auth);
         }
       } catch (error) {
-        if (!auth.currentUser) await signInAnonymously(auth);
+        console.error("Auth Error:", error);
+        // تلاش مجدد در صورت خطا
+        if (!auth.currentUser) {
+            try {
+                await signInAnonymously(auth);
+            } catch (innerError) {
+                console.error("Fallback Auth Failed:", innerError);
+            }
+        }
       }
     };
     initAuth();
@@ -290,18 +281,30 @@ export default function SchoolExhibitionApp() {
     };
   }, []);
 
-  // --- Real-time Data ---
+  // --- Real-time Data Fetching ---
   useEffect(() => {
     if (!user) return;
+    
+    // استفاده از ساختار استاندارد کالکشن‌ها برای جلوگیری از ارورهای پرمیشن
+    const projectsRef = collection(db, 'artifacts', appId, 'public', 'data', 'projects');
+    const votesRef = collection(db, 'artifacts', appId, 'public', 'data', 'path_votes');
+    const scoresRef = collection(db, 'artifacts', appId, 'public', 'data', 'scores');
+
     try {
-        const unsubProjects = onSnapshot(query(collection(db, 'artifacts', appId, 'public', 'data', 'projects'), orderBy('createdAt', 'desc')), 
-          (snap) => setProjects(snap.docs.map(d => ({ id: d.id, ...d.data() }))));
+        const unsubProjects = onSnapshot(query(projectsRef, orderBy('createdAt', 'desc')), 
+          (snap) => setProjects(snap.docs.map(d => ({ id: d.id, ...d.data() }))),
+          (err) => console.error("Projects Error:", err)
+        );
 
-        const unsubVotes = onSnapshot(query(collection(db, 'artifacts', appId, 'public', 'data', 'path_votes')), 
-          (snap) => setVotes(snap.docs.map(d => ({ id: d.id, ...d.data() }))));
+        const unsubVotes = onSnapshot(query(votesRef), 
+          (snap) => setVotes(snap.docs.map(d => ({ id: d.id, ...d.data() }))),
+          (err) => console.error("Votes Error:", err)
+        );
 
-        const unsubScores = onSnapshot(query(collection(db, 'artifacts', appId, 'public', 'data', 'scores')), 
-          (snap) => setScores(snap.docs.map(d => ({ id: d.id, ...d.data() }))));
+        const unsubScores = onSnapshot(query(scoresRef), 
+          (snap) => setScores(snap.docs.map(d => ({ id: d.id, ...d.data() }))),
+          (err) => console.error("Scores Error:", err)
+        );
 
         return () => { unsubProjects(); unsubVotes(); unsubScores(); };
     } catch (e) { console.error(e); }
@@ -335,13 +338,12 @@ export default function SchoolExhibitionApp() {
     setView("login");
   };
 
-  // --- Database Wipe (REAL RESET) ---
+  // --- Database Wipe ---
   const handleDatabaseReset = () => {
       openConfirmModal(
           "پاکسازی کامل سیستم",
           "آیا مطمئن هستید؟ \nاین کار تمام آرا و نمرات ثبت شده را برای همیشه پاک می‌کند و قابل بازگشت نیست!",
           async () => {
-              // Second confirmation for safety
               setTimeout(() => {
                   openConfirmModal(
                     "تایید نهایی",
@@ -349,10 +351,20 @@ export default function SchoolExhibitionApp() {
                     async () => {
                         setLoading(true);
                         try {
-                            const voteSnapshot = await getDocs(collection(db, 'artifacts', appId, 'public', 'data', 'path_votes'));
-                            voteSnapshot.forEach(async (doc) => await deleteDoc(doc.ref));
-                            const scoreSnapshot = await getDocs(collection(db, 'artifacts', appId, 'public', 'data', 'scores'));
-                            scoreSnapshot.forEach(async (doc) => await deleteDoc(doc.ref));
+                            // Fetch snapshots securely
+                            const votesRef = collection(db, 'artifacts', appId, 'public', 'data', 'path_votes');
+                            const scoresRef = collection(db, 'artifacts', appId, 'public', 'data', 'scores');
+                            
+                            const voteSnapshot = await getDocs(votesRef);
+                            const scoreSnapshot = await getDocs(scoresRef);
+                            
+                            // Delete in parallel
+                            const deletePromises = [
+                                ...voteSnapshot.docs.map(d => deleteDoc(d.ref)),
+                                ...scoreSnapshot.docs.map(d => deleteDoc(d.ref))
+                            ];
+                            
+                            await Promise.all(deletePromises);
                             showToast("دیتابیس با موفقیت پاکسازی شد", "success");
                         } catch (error) {
                             console.error(error);
@@ -382,14 +394,19 @@ export default function SchoolExhibitionApp() {
     if (!user) return;
     const existingVote = votes.find(v => v.userId === user.uid);
     const data = { userId: user.uid, userName, category, timestamp: new Date() };
+    const votesRef = collection(db, 'artifacts', appId, 'public', 'data', 'path_votes');
     
-    if (existingVote) {
-      await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'path_votes', existingVote.id), data, { merge: true });
-    } else {
-      await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'path_votes'), data);
+    try {
+        if (existingVote) {
+            await setDoc(doc(votesRef, existingVote.id), data, { merge: true });
+        } else {
+            await addDoc(votesRef, data);
+        }
+        setView("judge");
+        showToast(`مسیر ${category} انتخاب شد`);
+    } catch (e) {
+        showToast("خطا در ثبت رای", "error");
     }
-    setView("judge");
-    showToast(`مسیر ${category} انتخاب شد`);
   };
 
   const handleDraftChange = (projectId, field, value) => {
@@ -414,31 +431,42 @@ export default function SchoolExhibitionApp() {
     };
 
     const scoreId = `${user.uid}_${projectId}`;
-    await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'scores', scoreId), {
-      projectId,
-      judgeId: user.uid,
-      judgeName: userName,
-      updatedAt: new Date(),
-      ...dataToSave
-    }, { merge: true });
+    const scoresRef = collection(db, 'artifacts', appId, 'public', 'data', 'scores');
 
-    const newDrafts = {...draftScores};
-    delete newDrafts[projectId];
-    setDraftScores(newDrafts);
+    try {
+        await setDoc(doc(scoresRef, scoreId), {
+          projectId,
+          judgeId: user.uid,
+          judgeName: userName,
+          updatedAt: new Date(),
+          ...dataToSave
+        }, { merge: true });
 
-    showToast("رای شما با موفقیت ثبت شد");
+        const newDrafts = {...draftScores};
+        delete newDrafts[projectId];
+        setDraftScores(newDrafts);
+
+        showToast("رای شما با موفقیت ثبت شد");
+    } catch (e) {
+        showToast("خطا در ثبت امتیاز", "error");
+    }
   };
 
   const addProject = async () => {
     if (!newProjectName || !newStudentName) return;
-    await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'projects'), {
-      name: newProjectName,
-      student: newStudentName,
-      createdAt: new Date()
-    });
-    setNewProjectName("");
-    setNewStudentName("");
-    showToast("پروژه جدید اضافه شد");
+    const projectsRef = collection(db, 'artifacts', appId, 'public', 'data', 'projects');
+    try {
+        await addDoc(projectsRef, {
+          name: newProjectName,
+          student: newStudentName,
+          createdAt: new Date()
+        });
+        setNewProjectName("");
+        setNewStudentName("");
+        showToast("پروژه جدید اضافه شد");
+    } catch (e) {
+        showToast("خطا در افزودن پروژه", "error");
+    }
   };
 
   const deleteProject = (id) => {
@@ -446,8 +474,13 @@ export default function SchoolExhibitionApp() {
         "حذف پروژه",
         "آیا از حذف این پروژه و تمام سوابق آن اطمینان دارید؟",
         async () => {
-            await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'projects', id));
-            showToast("پروژه با موفقیت حذف شد");
+            const projectsRef = collection(db, 'artifacts', appId, 'public', 'data', 'projects');
+            try {
+                await deleteDoc(doc(projectsRef, id));
+                showToast("پروژه با موفقیت حذف شد");
+            } catch (e) {
+                showToast("خطا در حذف پروژه", "error");
+            }
         },
         'danger',
         "بله، حذف شود"
@@ -472,15 +505,12 @@ export default function SchoolExhibitionApp() {
   // --- Calculations ---
   const voteCounts = useMemo(() => {
     const counts = {};
-    // Initialize all categories with 0
     VOTE_CATEGORIES.forEach(cat => counts[cat.id] = 0);
     
-    // Count votes
     votes.forEach(v => {
       if (counts[v.category] !== undefined) {
           counts[v.category]++;
       } else {
-          // Handle legacy or unknown categories safely
           counts[v.category] = (counts[v.category] || 0) + 1;
       }
     });
