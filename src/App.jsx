@@ -19,13 +19,13 @@ import {
 /* تنظیمات فایربیس */
 /* تنظیمات فایربیس */
 const firebaseConfig = {
-  apiKey: "AIzaSyBzhIE1Vakctip7WuKoq7OjViuQk04TBTM",
-  authDomain: "schoolapp-630cb.firebaseapp.com",
-  projectId: "schoolapp-630cb",
-  storageBucket: "schoolapp-630cb.firebasestorage.app",
-  messagingSenderId: "799329665536",
-  appId: "1:799329665536:web:24e45acfd1dab8223bcee5",
-  measurementId: "G-6881YK4W47"
+  apiKey: "AIzaSyBn6XE3cYkNgGGO9_-HA7TP0MmldGrp54M",
+  authDomain: "schoolapp-630cb-b0c1b.firebaseapp.com",
+  projectId: "schoolapp-630cb-b0c1b",
+  storageBucket: "schoolapp-630cb-b0c1b.firebasestorage.app",
+  messagingSenderId: "63563124696",
+  appId: "1:63563124696:web:2df511fc23c7aca299acad",
+  measurementId: "G-N6CVTX51Z0"
 };
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
