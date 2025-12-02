@@ -16,10 +16,7 @@ import {
   Music, Camera, Globe, HelpCircle
 } from 'lucide-react';
 
-/* تنظیمات فایربیس 
-  نکته: مقادیر به صورت مستقیم (Hardcode) قرار داده شدند تا خطای import.meta 
-  در محیط‌های قدیمی‌تر یا خاص برطرف شود.
-*/
+/* تنظیمات فایربیس */
 const firebaseConfig = {
   apiKey: "AIzaSyBn6XE3cYkNgGGO9_-HA7TP0MmldGrp54M",
   authDomain: "schoolapp-630cb-b0c1b.firebaseapp.com",
@@ -29,13 +26,11 @@ const firebaseConfig = {
   appId: "1:63563124696:web:2df511fc23c7aca299acad",
   measurementId: "G-N6CVTX51Z0"
 };
-
+};
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-
-// --- شناسه یکپارچه دیتابیس ---
-const appId = 'shiraz-med-school-main-db'; 
+const appId = typeof __app_id !== 'undefined' ? __app_id : 'med-school-exhibit';
 
 // --- لیست دسته‌بندی‌های رای‌گیری (۱۳ گزینه) ---
 const VOTE_CATEGORIES = [
@@ -301,9 +296,7 @@ export default function SchoolExhibitionApp() {
     if (!user) return;
     try {
         const unsubProjects = onSnapshot(query(collection(db, 'artifacts', appId, 'public', 'data', 'projects'), orderBy('createdAt', 'desc')), 
-          (snap) => setProjects(snap.docs.map(d => ({ id: d.id, ...d.data() }))),
-          (error) => { console.error("Snapshot error:", error); showToast("خطا در دریافت اطلاعات. اتصال اینترنت را بررسی کنید.", "error"); }
-        );
+          (snap) => setProjects(snap.docs.map(d => ({ id: d.id, ...d.data() }))));
 
         const unsubVotes = onSnapshot(query(collection(db, 'artifacts', appId, 'public', 'data', 'path_votes')), 
           (snap) => setVotes(snap.docs.map(d => ({ id: d.id, ...d.data() }))));
