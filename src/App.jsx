@@ -16,21 +16,26 @@ import {
   Music, Camera, Globe, HelpCircle
 } from 'lucide-react';
 
-/* تنظیمات فایربیس */
+/* تنظیمات فایربیس 
+  نکته: مقادیر به صورت مستقیم (Hardcode) قرار داده شدند تا خطای import.meta 
+  در محیط‌های قدیمی‌تر یا خاص برطرف شود.
+*/
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_API_KEY,
-  authDomain: import.meta.env.VITE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_APP_ID,
-  measurementId: import.meta.env.VITE_MEASUREMENT_ID
+  apiKey: "AIzaSyBzhIE1Vakctip7WuKoq7OjViuQk04TBTM",
+  authDomain: "schoolapp-630cb.firebaseapp.com",
+  projectId: "schoolapp-630cb",
+  storageBucket: "schoolapp-630cb.firebasestorage.app",
+  messagingSenderId: "799329665536",
+  appId: "1:799329665536:web:24e45acfd1dab8223bcee5",
+  measurementId: "G-6881YK4W47"
 };
-};
+
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-const appId = typeof __app_id !== 'undefined' ? __app_id : 'med-school-exhibit';
+
+// --- شناسه یکپارچه دیتابیس ---
+const appId = 'shiraz-med-school-main-db'; 
 
 // --- لیست دسته‌بندی‌های رای‌گیری (۱۳ گزینه) ---
 const VOTE_CATEGORIES = [
@@ -296,7 +301,9 @@ export default function SchoolExhibitionApp() {
     if (!user) return;
     try {
         const unsubProjects = onSnapshot(query(collection(db, 'artifacts', appId, 'public', 'data', 'projects'), orderBy('createdAt', 'desc')), 
-          (snap) => setProjects(snap.docs.map(d => ({ id: d.id, ...d.data() }))));
+          (snap) => setProjects(snap.docs.map(d => ({ id: d.id, ...d.data() }))),
+          (error) => { console.error("Snapshot error:", error); showToast("خطا در دریافت اطلاعات. اتصال اینترنت را بررسی کنید.", "error"); }
+        );
 
         const unsubVotes = onSnapshot(query(collection(db, 'artifacts', appId, 'public', 'data', 'path_votes')), 
           (snap) => setVotes(snap.docs.map(d => ({ id: d.id, ...d.data() }))));
