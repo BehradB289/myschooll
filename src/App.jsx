@@ -430,7 +430,7 @@ export default function SchoolExhibitionApp() {
     showToast("رای شما با موفقیت ثبت شد");
   };
 
-const addProject = async () => {
+  const addProject = async () => {
   if (!newProjectName || !newStudentName) return;
   
   // ⬅️ اینجا مشکل شما حل می‌شود: اضافه کردن فیلد createdAt
@@ -443,7 +443,8 @@ const addProject = async () => {
   setNewProjectName("");
   setNewStudentName("");
   showToast("پروژه جدید اضافه شد");
-};
+
+  };
 
   const deleteProject = (id) => {
     openConfirmModal(
