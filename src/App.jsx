@@ -17,15 +17,15 @@ import {
 } from 'lucide-react';
 
 /* تنظیمات فایربیس */
-/* تنظیمات فایربیس */
 const firebaseConfig = {
-  apiKey: "AIzaSyBn6XE3cYkNgGGO9_-HA7TP0MmldGrp54M",
-  authDomain: "schoolapp-630cb-b0c1b.firebaseapp.com",
-  projectId: "schoolapp-630cb-b0c1b",
-  storageBucket: "schoolapp-630cb-b0c1b.firebasestorage.app",
-  messagingSenderId: "63563124696",
-  appId: "1:63563124696:web:2df511fc23c7aca299acad",
-  measurementId: "G-N6CVTX51Z0"
+  apiKey: import.meta.env.VITE_API_KEY,
+  authDomain: import.meta.env.VITE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_APP_ID,
+  measurementId: import.meta.env.VITE_MEASUREMENT_ID
+};
 };
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -430,17 +430,20 @@ export default function SchoolExhibitionApp() {
     showToast("رای شما با موفقیت ثبت شد");
   };
 
-  const addProject = async () => {
-    if (!newProjectName || !newStudentName) return;
-    await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'projects'), {
-      name: newProjectName,
-      student: newStudentName,
-      createdAt: new Date()
-    });
-    setNewProjectName("");
-    setNewStudentName("");
-    showToast("پروژه جدید اضافه شد");
-  };
+const addProject = async () => {
+  if (!newProjectName || !newStudentName) return;
+  
+  // ⬅️ اینجا مشکل شما حل می‌شود: اضافه کردن فیلد createdAt
+  await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'projects'), {
+    name: newProjectName,
+    student: newStudentName,
+    createdAt: new Date() // ⭐️ مطمئن شوید که این فیلد حتماً ارسال شود 
+  });
+  
+  setNewProjectName("");
+  setNewStudentName("");
+  showToast("پروژه جدید اضافه شد");
+};
 
   const deleteProject = (id) => {
     openConfirmModal(
