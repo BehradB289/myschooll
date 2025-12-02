@@ -18,13 +18,14 @@ import {
 
 /* تنظیمات فایربیس */
 const firebaseConfig = {
-  apiKey: "AIzaSyBzhIE1Vakctip7WuKoq7OjViuQk04TBTM",
-  authDomain: "schoolapp-630cb.firebaseapp.com",
-  projectId: "schoolapp-630cb",
-  storageBucket: "schoolapp-630cb.firebasestorage.app",
-  messagingSenderId: "799329665536",
-  appId: "1:799329665536:web:24e45acfd1dab8223bcee5",
-  measurementId: "G-6881YK4W47"
+  apiKey: import.meta.env.VITE_API_KEY,
+  authDomain: import.meta.env.VITE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_APP_ID,
+  measurementId: import.meta.env.VITE_MEASUREMENT_ID
+};
 };
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
