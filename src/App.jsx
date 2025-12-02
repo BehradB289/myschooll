@@ -431,19 +431,15 @@ export default function SchoolExhibitionApp() {
   };
 
   const addProject = async () => {
-  if (!newProjectName || !newStudentName) return;
-  
-  // ⬅️ اینجا مشکل شما حل می‌شود: اضافه کردن فیلد createdAt
-  await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'projects'), {
-    name: newProjectName,
-    student: newStudentName,
-    createdAt: new Date() // ⭐️ مطمئن شوید که این فیلد حتماً ارسال شود 
-  });
-  
-  setNewProjectName("");
-  setNewStudentName("");
-  showToast("پروژه جدید اضافه شد");
-
+    if (!newProjectName || !newStudentName) return;
+    await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'projects'), {
+      name: newProjectName,
+      student: newStudentName,
+      createdAt: new Date()
+    });
+    setNewProjectName("");
+    setNewStudentName("");
+    showToast("پروژه جدید اضافه شد");
   };
 
   const deleteProject = (id) => {
